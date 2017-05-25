@@ -26,7 +26,7 @@ public class GameTetris extends Game {
         VIEWPORT_HEIGHT = Gdx.graphics.getHeight();
         ratio = ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth());
 
-        this.setScreen(new MenuScreen());
+        this.setScreen(new GameScreen());
 
     }
 

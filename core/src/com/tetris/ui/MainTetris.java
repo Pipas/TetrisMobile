@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tetris.game.GameState;
 
 
-public class MainTetris extends ApplicationAdapter implements InputProcessor
+/*public class MainTetris extends ApplicationAdapter implements InputProcessor
 {
 	public static int WORLD_WIDTH; // Arbitrary world size (e.g. meters)
 	public static int WORLD_HEIGHT;
@@ -148,4 +148,4 @@ public class MainTetris extends ApplicationAdapter implements InputProcessor
 	{
 		return false;
 	}
-}
+}*/
