@@ -1,17 +1,27 @@
-package com.lpoo.tetris;
+package com.tetris.ui;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.tetris.game.GameState;
 
 
 public class MainTetris extends ApplicationAdapter implements InputProcessor
 {
+	public static int WORLD_WIDTH; // Arbitrary world size (e.g. meters)
+	public static int WORLD_HEIGHT;
+	// The ammount of world we want to show in our screen
+	public static int VIEWPORT_WIDTH;
+	public static int VIEWPORT_HEIGHT; // Can be calculated from screen ratio
+	// How to transform from pixels to our unit
+	public static int PIXEL_TO_METER = 1;
+	float ratio;
+
+
 	private SpriteBatch batch;
 	private Sprite sprite;
 	private Texture img;
@@ -25,6 +35,13 @@ public class MainTetris extends ApplicationAdapter implements InputProcessor
 	@Override
 	public void create ()
 	{
+		//Initialize static values
+		WORLD_WIDTH = Gdx.graphics.getWidth();
+		WORLD_HEIGHT = Gdx.graphics.getHeight();
+		VIEWPORT_WIDTH = Gdx.graphics.getWidth();
+		VIEWPORT_HEIGHT = Gdx.graphics.getHeight();
+		ratio = ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth());
+
 		batch = new SpriteBatch();
 
 		gameState = new GameState();

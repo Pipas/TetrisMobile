@@ -1,4 +1,4 @@
-package com.lpoo.tetris;
+package com.tetris.game;
 
 import java.util.Arrays;
 
@@ -11,6 +11,13 @@ public class GameState
     private char[][] board;
     private Piece fallingPiece;
     Boolean d = false;
+    private static GameState gs;
+
+    public static GameState get(){
+        if (gs == null)
+            gs = new GameState();
+        return gs;
+    }
 
     public GameState()
     {

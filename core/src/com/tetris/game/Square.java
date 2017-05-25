@@ -1,4 +1,4 @@
-package com.lpoo.tetris;
+package com.tetris.game;
 
 /**
  * Created by Pipas_ on 18/05/2017.

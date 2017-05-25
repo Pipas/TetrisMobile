@@ -1,4 +1,4 @@
-package com.lpoo.tetris;
+package com.tetris.game;
 
 import java.util.ArrayList;
 import java.util.Random;

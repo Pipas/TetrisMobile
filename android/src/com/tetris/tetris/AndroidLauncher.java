@@ -1,10 +1,9 @@
-package com.lpoo.tetris;
+package com.tetris.tetris;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.lpoo.tetris.MainTetris;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
