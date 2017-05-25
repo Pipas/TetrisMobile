@@ -2,27 +2,23 @@ package com.lpoo.tetris;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input.Peripheral;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
-public class MainTetris extends ApplicationAdapter
+
+public class MainTetris extends ApplicationAdapter implements InputProcessor
 {
 	private SpriteBatch batch;
-	private FreeTypeFontGenerator generator;
-	private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-	private BitmapFont font15;
 	private Sprite sprite;
 	private Texture img;
+	private GameState gameState;
+	private int count = 0;
+	private int speed = 30;
+
 
 	private float BLOCK_SIZE;
 	
@@ -30,19 +26,17 @@ public class MainTetris extends ApplicationAdapter
 	public void create ()
 	{
 		batch = new SpriteBatch();
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("3Dventure.ttf"));
-		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		parameter.size = 150;
-		font15 = generator.generateFont(parameter);
-		font15.setColor(Color.BLACK);
 
-		img = new Texture("badlogic.jpg");
+		gameState = new GameState();
+
+		img = new Texture("happySquare.png");
 		sprite = new Sprite(img);
+
 		BLOCK_SIZE = Gdx.graphics.getWidth() / 10;
 		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2);
 
-
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
@@ -53,22 +47,88 @@ public class MainTetris extends ApplicationAdapter
 
 		batch.begin();
 
-		for (int i = 0; i < 10; i++)
+		for(int x = 0; x < 10; x ++)
 		{
-			batch.draw(sprite, i*BLOCK_SIZE, sprite.getY(), BLOCK_SIZE, BLOCK_SIZE);
+			for(int y = 0; y < 15; y++)
+			{
+				if(gameState.getDynamicBoard()[y][x] != ' ')
+					batch.draw(sprite, x*BLOCK_SIZE, y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+			}
 		}
 
-		font15.draw(batch, "Hello World!", 10, 150);
-
 		batch.end();
+		count++;
+		if(count >= speed)
+		{
+			count = 0;
+			if (Gdx.input.getAccelerometerX() >= 0.75)
+				gameState.strafeLeft();
+			else if (Gdx.input.getAccelerometerX() <= -0.75)
+				gameState.strafeRight();
+			gameState.advance();
+		}
 	}
 	
 	@Override
 	public void dispose ()
 	{
 		batch.dispose();
-		font15.dispose();
-		generator.dispose();
 		img.dispose();
+	}
+
+	@Override
+	public boolean touchDown (int screenX, int screenY, int pointer, int button)
+	{
+		gameState.rotate();
+		return true;
+	}
+
+	@Override
+	public boolean touchDragged (int screenX, int screenY, int pointer)
+	{
+        gameState.debug();
+		return true;
+	}
+
+	@Override
+	public boolean touchUp (int screenX, int screenY, int pointer, int button)
+	{
+		return false;
+	}
+
+	@Override
+	public void resize (int width, int height)
+	{
+		return;
+	}
+
+	@Override
+	public boolean keyDown (int keycode)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyUp (int keycode)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped (char character)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean scrolled (int amount)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved (int screenX, int screenY)
+	{
+		return false;
 	}
 }
