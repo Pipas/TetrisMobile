@@ -2,6 +2,8 @@ package com.tetris.game;
 
 import java.util.Arrays;
 
+import static com.badlogic.gdx.Input.Keys.M;
+
 /**
  * Created by Pipas_ on 18/05/2017.
  */
@@ -12,6 +14,10 @@ public class GameState
     private Piece fallingPiece;
     Boolean d = false;
     private static GameState gs;
+    private int totalLinesDeleted = 0;
+    private int linesDeletedRound = 0;
+    private int score = 0;
+    private int level = 6;
 
     public static GameState get(){
         if (gs == null)
@@ -81,6 +87,23 @@ public class GameState
         }
     }
 
+    public void instantFall()
+    {
+        while(!fallingPiece.isDone())
+            fallingPiece.advance();
+
+        if(fallingPiece.isDone())
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                if(fallingPiece.getSquarePos(i).getX() < 10 && fallingPiece.getSquarePos(i).getX() >= 0 && fallingPiece.getSquarePos(i).getY() < 15 && fallingPiece.getSquarePos(i).getY() >= 0)
+                    board[fallingPiece.getSquarePos(i).getY()][fallingPiece.getSquarePos(i).getX()] = fallingPiece.getPermanentChar();
+            }
+            clearLines();
+            generateNewPiece();
+        }
+    }
+
     public void rotate()
     {
         fallingPiece.rotate();
@@ -121,8 +144,22 @@ public class GameState
                 }
                 Arrays.fill(board[14], ' ');
                 y--;
+                linesDeletedRound++;
+                totalLinesDeleted++;
+                level = (totalLinesDeleted / 10) + 1;
             }
         }
+
+        if(linesDeletedRound == 1)
+            score += 40 * level;
+        else if(linesDeletedRound == 2)
+            score += 100 * level;
+        else if(linesDeletedRound == 3)
+            score += 300 * level;
+        else
+            score += 1200 * level;
+
+        linesDeletedRound = 0;
     }
 
     public void debug()
@@ -131,5 +168,15 @@ public class GameState
             d = true;
         else
             d = false;
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    public int getLevel()
+    {
+        return level;
     }
 }

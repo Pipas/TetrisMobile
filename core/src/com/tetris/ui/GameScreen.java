@@ -17,13 +17,15 @@ import com.tetris.game.GameState;
 public class GameScreen extends ScreenAdapter implements InputProcessor {
     private SpriteBatch batch;
     private Sprite sprite;
-    private Texture img;
+    private Texture red, blue, green, orange, pink, yellow, teal;
     private GameState gameState;
     private int count = 0;
-    private int speed = 30;
-
+    private int speed;
+    private int BASE_SPEED = 30;
+    private float ROTATE_ZONE;
+    private float FAST_DROP_ZONE;
     private float BLOCK_SIZE;
-
+    private float MID_SCREEN;
 
     @Override
     public void show(){
@@ -31,12 +33,18 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
         gameState = new GameState();
 
-        img = new Texture("happySquare.png");
-        sprite = new Sprite(img);
+        red = new Texture("redHappySquare.png");
+        blue = new Texture("blueHappySquare.png");
+        orange = new Texture("orangeHappySquare.png");
+        yellow = new Texture("yellowHappySquare.png");
+        green = new Texture("greenHappySquare.png");
+        pink = new Texture("pinkHappySquare.png");
+        teal = new Texture("tealHappySquare.png");
 
         BLOCK_SIZE = Gdx.graphics.getWidth() / 10;
-        sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2);
+        ROTATE_ZONE = Gdx.graphics.getHeight() * 0.8f;
+        FAST_DROP_ZONE = Gdx.graphics.getHeight() * 0.2f;
+        MID_SCREEN = Gdx.graphics.getWidth()/2;
 
         Gdx.input.setInputProcessor(this);
     }
@@ -52,6 +60,21 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         {
             for(int y = 0; y < 15; y++)
             {
+                if(gameState.getDynamicBoard()[y][x] == 'T' || gameState.getDynamicBoard()[y][x] == 't')
+                    sprite = new Sprite(red);
+                else if(gameState.getDynamicBoard()[y][x] == 'S' || gameState.getDynamicBoard()[y][x] == 's')
+                    sprite = new Sprite(yellow);
+                else if(gameState.getDynamicBoard()[y][x] == 'K' || gameState.getDynamicBoard()[y][x] == 'k')
+                    sprite = new Sprite(orange);
+                else if(gameState.getDynamicBoard()[y][x] == 'A' || gameState.getDynamicBoard()[y][x] == 'a')
+                    sprite = new Sprite(green);
+                else if(gameState.getDynamicBoard()[y][x] == 'L' || gameState.getDynamicBoard()[y][x] == 'l')
+                    sprite = new Sprite(pink);
+                else if(gameState.getDynamicBoard()[y][x] == 'V' || gameState.getDynamicBoard()[y][x] == 'v')
+                    sprite = new Sprite(blue);
+                else
+                    sprite = new Sprite(teal);
+
                 if(gameState.getDynamicBoard()[y][x] != ' ')
                     batch.draw(sprite, x*BLOCK_SIZE, y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
@@ -68,27 +91,45 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
                 gameState.strafeRight();
             gameState.advance();
         }
+        if(gameState.getLevel() <= 5)
+            speed = BASE_SPEED - (gameState.getLevel() - 1) * 5;
+        else
+            speed = BASE_SPEED - 15 - gameState.getLevel();
     }
 
     @Override
     public void dispose ()
     {
         batch.dispose();
-        img.dispose();
+        red.dispose();
+        blue.dispose();
+        green.dispose();
+        yellow.dispose();
+        orange.dispose();
+        pink.dispose();
     }
 
     @Override
     public boolean touchDown (int screenX, int screenY, int pointer, int button)
     {
-        gameState.rotate();
+        if(screenY > ROTATE_ZONE)
+            gameState.rotate();
+        else if(screenY < FAST_DROP_ZONE)
+            gameState.instantFall();
+        else
+        {
+            if(screenX > MID_SCREEN)
+                gameState.strafeRight();
+            else
+                gameState.strafeLeft();
+        }
         return true;
     }
 
     @Override
     public boolean touchDragged (int screenX, int screenY, int pointer)
     {
-        gameState.debug();
-        return true;
+        return false;
     }
 
     @Override
