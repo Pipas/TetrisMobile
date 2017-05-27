@@ -1,6 +1,5 @@
 package com.tetris.ui;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
@@ -20,12 +19,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     private Texture red, blue, green, orange, pink, yellow, teal;
     private GameState gameState;
     private int count = 0;
+    private int strafeCount = 0;
+    private boolean boost = false;
     private int speed;
     private int BASE_SPEED = 30;
-    private float ROTATE_ZONE;
     private float FAST_DROP_ZONE;
     private float BLOCK_SIZE;
-    private float MID_SCREEN;
 
     @Override
     public void show(){
@@ -42,9 +41,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         teal = new Texture("tealHappySquare.png");
 
         BLOCK_SIZE = Gdx.graphics.getWidth() / 10;
-        ROTATE_ZONE = Gdx.graphics.getHeight() * 0.8f;
-        FAST_DROP_ZONE = Gdx.graphics.getHeight() * 0.2f;
-        MID_SCREEN = Gdx.graphics.getWidth()/2;
+        FAST_DROP_ZONE = Gdx.graphics.getHeight() * 0.8f;
 
         Gdx.input.setInputProcessor(this);
     }
@@ -81,20 +78,50 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         }
 
         batch.end();
-        count++;
-        if(count >= speed)
+
+        if (Math.abs(Gdx.input.getAccelerometerX()) < 0.75)
+            strafeCount = 0;
+        else if (Math.abs(Gdx.input.getAccelerometerX()) >= 0.75 && Math.abs(Gdx.input.getAccelerometerX()) < 1.5)
         {
-            count = 0;
+            strafeCount++;
+        }
+        else
+        {
+            strafeCount += 2;
+        }
+
+        if(strafeCount >= 10)
+        {
             if (Gdx.input.getAccelerometerX() >= 0.75)
                 gameState.strafeLeft();
             else if (Gdx.input.getAccelerometerX() <= -0.75)
                 gameState.strafeRight();
+            strafeCount = 0;
+        }
+
+        count++;
+
+        if(boost)
+        {
+            if(count >= 3)
+            {
+                count = 0;
+                gameState.advance();
+            }
+        }
+        else if(count >= speed)
+        {
+            count = 0;
             gameState.advance();
         }
+
         if(gameState.getLevel() <= 5)
             speed = BASE_SPEED - (gameState.getLevel() - 1) * 5;
         else
             speed = BASE_SPEED - 15 - gameState.getLevel();
+
+        if(gameState.checkGameOver())
+            gameState = new GameState();
     }
 
     @Override
@@ -107,22 +134,18 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         yellow.dispose();
         orange.dispose();
         pink.dispose();
+        teal.dispose();
     }
 
     @Override
     public boolean touchDown (int screenX, int screenY, int pointer, int button)
     {
-        if(screenY > ROTATE_ZONE)
-            gameState.rotate();
-        else if(screenY < FAST_DROP_ZONE)
-            gameState.instantFall();
-        else
+        if(screenY > FAST_DROP_ZONE)
         {
-            if(screenX > MID_SCREEN)
-                gameState.strafeRight();
-            else
-                gameState.strafeLeft();
+            boost = true;
         }
+        else if(screenY < FAST_DROP_ZONE)
+            gameState.rotate();
         return true;
     }
 
@@ -135,7 +158,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     @Override
     public boolean touchUp (int screenX, int screenY, int pointer, int button)
     {
-        return false;
+        boost = false;
+        return true;
     }
 
     @Override

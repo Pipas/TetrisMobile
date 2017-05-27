@@ -108,6 +108,7 @@ public class Piece
         if(canFall())
         {
             position.decreaseY();
+            endState = false;
         }
         else
         {

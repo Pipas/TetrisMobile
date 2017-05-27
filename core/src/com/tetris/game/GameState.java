@@ -12,18 +12,13 @@ public class GameState
 {
     private char[][] board;
     private Piece fallingPiece;
-    Boolean d = false;
-    private static GameState gs;
+    private Piece nextPiece;
     private int totalLinesDeleted = 0;
     private int linesDeletedRound = 0;
     private int score = 0;
-    private int level = 6;
-
-    public static GameState get(){
-        if (gs == null)
-            gs = new GameState();
-        return gs;
-    }
+    private int level = 1;
+    private boolean hoverPeriod = false;
+    private boolean gameOver = false;
 
     public GameState()
     {
@@ -32,13 +27,11 @@ public class GameState
             Arrays.fill(board[i], ' ');
 
         fallingPiece = new Piece(4, 14, this);
+        nextPiece = new Piece(4, 14, this);
     }
 
     public char[][] getDynamicBoard()
     {
-        if(d)
-            d = false;
-
         clearTemporaryBoard();
 
         for(int i = 0; i < 4; i++)
@@ -75,16 +68,22 @@ public class GameState
     public void advance()
     {
         fallingPiece.advance();
-        if(fallingPiece.isDone())
+        if(!fallingPiece.isDone())
+            hoverPeriod = false;
+        if(hoverPeriod)
         {
             for(int i = 0; i < 4; i++)
             {
                 if(fallingPiece.getSquarePos(i).getX() < 10 && fallingPiece.getSquarePos(i).getX() >= 0 && fallingPiece.getSquarePos(i).getY() < 15 && fallingPiece.getSquarePos(i).getY() >= 0)
                     board[fallingPiece.getSquarePos(i).getY()][fallingPiece.getSquarePos(i).getX()] = fallingPiece.getPermanentChar();
             }
+            hoverPeriod = false;
             clearLines();
             generateNewPiece();
         }
+        if(fallingPiece.isDone())
+            hoverPeriod = true;
+
     }
 
     public void instantFall()
@@ -121,7 +120,10 @@ public class GameState
 
     private void generateNewPiece()
     {
-        fallingPiece = new Piece(4, 14, this);
+        fallingPiece = nextPiece;
+        nextPiece = new Piece(4, 14, this);
+        if(getRegularBoard()[14][4] >= 'A' && getRegularBoard()[14][4] <= 'Z' || (getRegularBoard()[14][5] >= 'A' && getRegularBoard()[14][5] <= 'Z'))
+            gameOver = true;
     }
 
     private void clearLines()
@@ -162,14 +164,6 @@ public class GameState
         linesDeletedRound = 0;
     }
 
-    public void debug()
-    {
-        if(d == false)
-            d = true;
-        else
-            d = false;
-    }
-
     public int getScore()
     {
         return score;
@@ -178,5 +172,10 @@ public class GameState
     public int getLevel()
     {
         return level;
+    }
+
+    public boolean checkGameOver()
+    {
+        return gameOver;
     }
 }
