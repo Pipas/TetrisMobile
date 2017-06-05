@@ -3,6 +3,7 @@ package com.tetris.game;
 import java.util.Arrays;
 
 import static com.badlogic.gdx.Input.Keys.M;
+import static com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape.line;
 
 /**
  * Created by Pipas_ on 18/05/2017.
@@ -19,6 +20,7 @@ public class GameState
     private int level = 1;
     private boolean hoverPeriod = false;
     private boolean gameOver = false;
+    private boolean lineWasDeleted = false;
 
     public GameState()
     {
@@ -60,6 +62,11 @@ public class GameState
         return board;
     }
 
+    public Piece getNextPiece()
+    {
+        return nextPiece;
+    }
+
     public Piece getFallingPiece()
     {
         return fallingPiece;
@@ -67,6 +74,7 @@ public class GameState
 
     public void advance()
     {
+        lineWasDeleted = false;
         fallingPiece.advance();
         if(!fallingPiece.isDone())
             hoverPeriod = false;
@@ -81,26 +89,9 @@ public class GameState
             clearLines();
             generateNewPiece();
         }
+
         if(fallingPiece.isDone())
             hoverPeriod = true;
-
-    }
-
-    public void instantFall()
-    {
-        while(!fallingPiece.isDone())
-            fallingPiece.advance();
-
-        if(fallingPiece.isDone())
-        {
-            for(int i = 0; i < 4; i++)
-            {
-                if(fallingPiece.getSquarePos(i).getX() < 10 && fallingPiece.getSquarePos(i).getX() >= 0 && fallingPiece.getSquarePos(i).getY() < 15 && fallingPiece.getSquarePos(i).getY() >= 0)
-                    board[fallingPiece.getSquarePos(i).getY()][fallingPiece.getSquarePos(i).getX()] = fallingPiece.getPermanentChar();
-            }
-            clearLines();
-            generateNewPiece();
-        }
     }
 
     public void rotate()
@@ -149,6 +140,7 @@ public class GameState
                 linesDeletedRound++;
                 totalLinesDeleted++;
                 level = (totalLinesDeleted / 10) + 1;
+                lineWasDeleted = true;
             }
         }
 
@@ -158,7 +150,7 @@ public class GameState
             score += 100 * level;
         else if(linesDeletedRound == 3)
             score += 300 * level;
-        else
+        else if(linesDeletedRound == 4)
             score += 1200 * level;
 
         linesDeletedRound = 0;
@@ -177,5 +169,10 @@ public class GameState
     public boolean checkGameOver()
     {
         return gameOver;
+    }
+
+    public boolean wasLineDeleted()
+    {
+        return lineWasDeleted;
     }
 }

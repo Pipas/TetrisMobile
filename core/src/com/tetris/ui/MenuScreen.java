@@ -35,8 +35,6 @@ public class MenuScreen extends ScreenAdapter {
 
     @Override
     public void show(){
-        //To delete
-        //menu = new Texture("inserir nome ecra aqui");
         batch = new SpriteBatch();
 
         stage = new Stage();

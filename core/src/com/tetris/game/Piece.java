@@ -93,6 +93,11 @@ public class Piece
         return position;
     }
 
+    public Position getSquare(int index)
+    {
+        return squares.get(index).getPosition();
+    }
+
     public Position getSquarePos(int index)
     {
         Position squarePosition = new Position(squares.get(index).getPosition().getX(), squares.get(index).getPosition().getY());
