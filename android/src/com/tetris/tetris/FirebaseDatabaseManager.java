@@ -19,9 +19,9 @@ public class FirebaseDatabaseManager implements DatabaseManager
         return true;
     }
 
-    public boolean addScore(int score)
+    public boolean addScore(int score, String name)
     {
-        mDatabase.child("scores").setValue(score);
+        mDatabase.child("scores").child(Integer.toString(score)).setValue(name);
         return true;
     }
 }

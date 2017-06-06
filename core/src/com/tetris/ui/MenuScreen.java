@@ -43,9 +43,6 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        GameTetris.get().getDatabaseManager().connect();
-        GameTetris.get().getDatabaseManager().addScore(1337);
-
         generator = new FreeTypeFontGenerator(Gdx.files.internal("prstart.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;

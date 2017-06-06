@@ -194,7 +194,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         if(gameState.checkGameOver())
         {
             music.stop();
-            GameTetris.get().setScreen(new GameOverScreen());
+            GameTetris.get().setScreen(new GameOverScreen(gameState.getScore()));
         }
     }
 
