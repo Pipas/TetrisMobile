@@ -2,7 +2,7 @@ package com.tetris.ui;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.tetris.score.DatabaseManager;
 
 /**
  * Created by Alexandre on 04-05-2017.
@@ -19,7 +19,13 @@ public class GameTetris extends Game {
     public static int PIXEL_TO_METER = 1;
     float ratio;
 
+    private DatabaseManager databaseManager;
     private static GameTetris gt;
+
+    public GameTetris(DatabaseManager dM)
+    {
+        databaseManager = dM;
+    }
 
     public void create(){
         //Initialize static values
@@ -35,10 +41,14 @@ public class GameTetris extends Game {
 
     }
 
-    public static GameTetris get(){
-        if (gt == null)
-            gt = new GameTetris();
+    public static GameTetris get()
+    {
         return gt;
+    }
+
+    public DatabaseManager getDatabaseManager()
+    {
+        return databaseManager;
     }
 
 }

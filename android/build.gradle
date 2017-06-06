@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "com.lpoo.tetris"
-        minSdkVersion 9
+        minSdkVersion 15
         targetSdkVersion 25
     }
 }
@@ -127,3 +127,5 @@ idea {
         }
     }
 }
+
+apply plugin: 'com.google.gms.google-services'
