@@ -73,6 +73,12 @@ public class MenuScreen extends ScreenAdapter {
                 GameTetris.get().setScreen(new GameScreen());
             }
         });
+        scoreButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GameTetris.get().setScreen(new ScoreScreen());
+            }
+        });
 
         Label.LabelStyle ls = new Label.LabelStyle(titleFont, Color.WHITE);
         title = new Label("TETRIS\nMOBILE", ls);

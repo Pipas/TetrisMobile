@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.tetris.score.Highscore;
 
 /**
  * Created by Alexandre on 04-05-2017.
@@ -90,6 +91,7 @@ public class GameOverScreen extends ScreenAdapter
             public void input(String input)
             {
                 name = input;
+                GameTetris.get().getDatabaseManager().addScore(new Highscore(name, score));
             }
 
             @Override
@@ -101,8 +103,7 @@ public class GameOverScreen extends ScreenAdapter
 
         Gdx.input.getTextInput(textListener, "Player Name: ", "", "max 5 lenght");
 
-        GameTetris.get().getDatabaseManager().connect();
-        GameTetris.get().getDatabaseManager().addScore(score, name);
+        //GameTetris.get().getDatabaseManager().addScore(new Highscore(name, score));
 
         scoreOutput = new Label("", ls);
 
@@ -128,6 +129,7 @@ public class GameOverScreen extends ScreenAdapter
         scoreOutput.setText(name);
         scoreOutput.setPosition(0.5f*GameTetris.VIEWPORT_WIDTH - scoreOutput.getWidth()/2*1.6f, 0.6f*GameTetris.VIEWPORT_HEIGHT);
         stage.addActor(scoreOutput);
+
 
         stage.act(delta);
         stage.draw();

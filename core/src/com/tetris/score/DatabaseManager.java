@@ -7,5 +7,6 @@ package com.tetris.score;
 public interface DatabaseManager
 {
     public boolean connect();
-    public boolean addScore(int score, String name);
+    public boolean addScore(Highscore newHighscore);
+    public boolean getScores();
 }
