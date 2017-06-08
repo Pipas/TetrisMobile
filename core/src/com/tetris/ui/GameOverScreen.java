@@ -30,12 +30,10 @@ public class GameOverScreen extends ScreenAdapter
     private Texture background, top, bot;
     private TextButton mainButton;
     private BitmapFont font;
-    private Label title, scoreOutput, nameOutput;
-    private FreeTypeFontGenerator generator;
-    private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    private Label title;
     private String name;
     private int score;
-    private Label.LabelStyle ls;
+    private Label.LabelStyle labelStyle;
 
     public GameOverScreen(int score)
     {
@@ -91,13 +89,13 @@ public class GameOverScreen extends ScreenAdapter
 
     private void initiateOutputLabels()
     {
-        scoreOutput = new Label(Integer.toString(score), ls);
+        Label scoreOutput = new Label(Integer.toString(score), labelStyle);
         scoreOutput.setFontScaleY(2);
         scoreOutput.setFontScaleX(2);
         scoreOutput.setPosition(0.5f* GameTetris.VIEWPORT_WIDTH - scoreOutput.getWidth(), 0.5f*GameTetris.VIEWPORT_HEIGHT);
         stage.addActor(scoreOutput);
 
-        nameOutput = new Label(name, ls);
+        Label nameOutput = new Label(name, labelStyle);
         nameOutput.setFontScaleY(2);
         nameOutput.setFontScaleX(2);
         nameOutput.setPosition(0.5f*GameTetris.VIEWPORT_WIDTH - nameOutput.getWidth(), 0.5f*GameTetris.VIEWPORT_HEIGHT + scoreOutput.getHeight() * 2.2f);
@@ -106,8 +104,8 @@ public class GameOverScreen extends ScreenAdapter
 
     private void initiateTitleLabel()
     {
-        ls = new Label.LabelStyle(font, Color.WHITE);
-        title = new Label("GAME\nOVER", ls);
+        labelStyle = new Label.LabelStyle(font, Color.WHITE);
+        title = new Label("GAME\nOVER", labelStyle);
         title.setPosition(0.5f* GameTetris.VIEWPORT_WIDTH - title.getWidth()/2*1.6f, 0.8f*GameTetris.VIEWPORT_HEIGHT);
         title.setFontScaleY(1.6f);
         title.setFontScaleX(1.6f);
@@ -130,6 +128,7 @@ public class GameOverScreen extends ScreenAdapter
             @Override
             public void clicked(InputEvent event, float x, float y)
             {
+                Gdx.input.vibrate(25);
                 GameTetris.get().setScreen(new MenuScreen());
             }
         });
@@ -144,8 +143,8 @@ public class GameOverScreen extends ScreenAdapter
 
     private void initiateFont()
     {
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         font = generator.generateFont(parameter);
         font.setColor(Color.WHITE);
