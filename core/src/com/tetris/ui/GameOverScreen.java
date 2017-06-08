@@ -29,12 +29,13 @@ public class GameOverScreen extends ScreenAdapter
     private Stage stage;
     private Texture background, top, bot;
     private TextButton mainButton;
-    private BitmapFont titleFont, buttonFont;
-    private Label title, scoreOutput;
+    private BitmapFont font;
+    private Label title, scoreOutput, nameOutput;
     private FreeTypeFontGenerator generator;
     private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private String name;
     private int score;
+    private Label.LabelStyle ls;
 
     public GameOverScreen(int score)
     {
@@ -42,55 +43,39 @@ public class GameOverScreen extends ScreenAdapter
     }
 
     @Override
-    public void show(){
+    public void show()
+    {
         batch = new SpriteBatch();
-
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("prstart.ttf"));
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
-        titleFont = generator.generateFont(parameter);
-        titleFont.setColor(Color.WHITE);
-        buttonFont = titleFont;
+        initiateFont();
 
-        background = new Texture("mainMenuBackground.png");
-        top = new Texture("mainMenuTop.png");
-        bot = new Texture("mainMenuBottom.png");
+        initiateTextures();
 
-        SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(new Texture("buttonBackground.png")));
-        TextButton.TextButtonStyle ts = new TextButton.TextButtonStyle(spriteDrawable, spriteDrawable, spriteDrawable, buttonFont);
-        ts.pressedOffsetX = 3;
-        ts.pressedOffsetY = -3;
+        initiateButton();
 
+        initiateTitleLabel();
 
-        mainButton = new TextButton("MAIN\nMENU", ts);
+        launchTextInput();
 
-        mainButton.setPosition(0.2f*GameTetris.VIEWPORT_WIDTH, 0.2f*GameTetris.VIEWPORT_HEIGHT);
+        stage.addActor(mainButton);
+        stage.addActor(title);
+    }
 
-        mainButton.setSize(0.6f*GameTetris.VIEWPORT_WIDTH, 0.2f*GameTetris.VIEWPORT_HEIGHT);
-
-        mainButton.pad(GameTetris.VIEWPORT_WIDTH/20);
-        mainButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                GameTetris.get().setScreen(new MenuScreen());
-            }
-        });
-
-        Label.LabelStyle ls = new Label.LabelStyle(titleFont, Color.WHITE);
-        title = new Label("GAME\nOVER", ls);
-        title.setPosition(0.5f*GameTetris.VIEWPORT_WIDTH - title.getWidth()/2*1.6f, 0.8f*GameTetris.VIEWPORT_HEIGHT);
-        title.setFontScaleY(1.6f);
-        title.setFontScaleX(1.6f);
-
+    private void launchTextInput()
+    {
         Input.TextInputListener textListener = new Input.TextInputListener()
         {
             @Override
             public void input(String input)
             {
                 name = input;
+                name = name.substring(0, Math.min(name.length(), 3));
+                name = name.toUpperCase();
+
+                initiateOutputLabels();
+
                 GameTetris.get().getDatabaseManager().addScore(new Highscore(name, score));
             }
 
@@ -101,22 +86,74 @@ public class GameOverScreen extends ScreenAdapter
             }
         };
 
-        Gdx.input.getTextInput(textListener, "Player Name: ", "", "max 5 lenght");
+        Gdx.input.getTextInput(textListener, "Enter your initials", "", "3 letter max");
+    }
 
-        //GameTetris.get().getDatabaseManager().addScore(new Highscore(name, score));
-
-        scoreOutput = new Label("", ls);
-
-        scoreOutput.setFontScaleY(1.6f);
-        scoreOutput.setFontScaleX(1.6f);
-
-        stage.addActor(mainButton);
-        stage.addActor(title);
+    private void initiateOutputLabels()
+    {
+        scoreOutput = new Label(Integer.toString(score), ls);
+        scoreOutput.setFontScaleY(2);
+        scoreOutput.setFontScaleX(2);
+        scoreOutput.setPosition(0.5f* GameTetris.VIEWPORT_WIDTH - scoreOutput.getWidth(), 0.5f*GameTetris.VIEWPORT_HEIGHT);
         stage.addActor(scoreOutput);
+
+        nameOutput = new Label(name, ls);
+        nameOutput.setFontScaleY(2);
+        nameOutput.setFontScaleX(2);
+        nameOutput.setPosition(0.5f*GameTetris.VIEWPORT_WIDTH - nameOutput.getWidth(), 0.5f*GameTetris.VIEWPORT_HEIGHT + scoreOutput.getHeight() * 2.2f);
+        stage.addActor(nameOutput);
+    }
+
+    private void initiateTitleLabel()
+    {
+        ls = new Label.LabelStyle(font, Color.WHITE);
+        title = new Label("GAME\nOVER", ls);
+        title.setPosition(0.5f* GameTetris.VIEWPORT_WIDTH - title.getWidth()/2*1.6f, 0.8f*GameTetris.VIEWPORT_HEIGHT);
+        title.setFontScaleY(1.6f);
+        title.setFontScaleX(1.6f);
+    }
+
+    private void initiateButton()
+    {
+        SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(new Texture("ui/buttonBackground.png")));
+        TextButton.TextButtonStyle ts = new TextButton.TextButtonStyle(spriteDrawable, spriteDrawable, spriteDrawable, font);
+        ts.pressedOffsetX = 3;
+        ts.pressedOffsetY = -3;
+
+        mainButton = new TextButton("MAIN\nMENU", ts);
+
+        mainButton.setPosition(0.2f* GameTetris.VIEWPORT_WIDTH, 0.2f*GameTetris.VIEWPORT_HEIGHT);
+        mainButton.setSize(0.6f*GameTetris.VIEWPORT_WIDTH, 0.2f*GameTetris.VIEWPORT_HEIGHT);
+        mainButton.pad(GameTetris.VIEWPORT_WIDTH/20);
+        mainButton.addListener(new ClickListener()
+        {
+            @Override
+            public void clicked(InputEvent event, float x, float y)
+            {
+                GameTetris.get().setScreen(new MenuScreen());
+            }
+        });
+    }
+
+    private void initiateTextures()
+    {
+        background = new Texture("ui/mainMenuBackground.png");
+        top = new Texture("ui/mainMenuTop.png");
+        bot = new Texture("ui/mainMenuBottom.png");
+    }
+
+    private void initiateFont()
+    {
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        font = generator.generateFont(parameter);
+        font.setColor(Color.WHITE);
     }
 
     @Override
-    public void render(float delta){
+    public void render(float delta)
+    {
         Gdx.gl.glClearColor(1,1,1,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -125,11 +162,6 @@ public class GameOverScreen extends ScreenAdapter
         batch.draw(top, 0, Gdx.graphics.getHeight() - Gdx.graphics.getWidth()*0.084f,  Gdx.graphics.getWidth(),  Gdx.graphics.getWidth()*0.084f);
         batch.draw(bot, 0, 0,  Gdx.graphics.getWidth(),  Gdx.graphics.getWidth()*0.084f);
         batch.end();
-
-        scoreOutput.setText(name);
-        scoreOutput.setPosition(0.5f*GameTetris.VIEWPORT_WIDTH - scoreOutput.getWidth()/2*1.6f, 0.6f*GameTetris.VIEWPORT_HEIGHT);
-        stage.addActor(scoreOutput);
-
 
         stage.act(delta);
         stage.draw();

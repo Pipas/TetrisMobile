@@ -34,16 +34,16 @@ public class Piece
                 squares.add(new Square(1 ,0));
                 squares.add(new Square(0 ,1));
                 squares.add(new Square(1 ,1));
-                temporaryChar = 's';
-                permanentChar = 'S';
+                temporaryChar = 'o';
+                permanentChar = 'O';
                 break;
             case 1:
                 squares.add(new Square(0 ,0));
                 squares.add(new Square(1 ,0));
                 squares.add(new Square(2 ,0));
                 squares.add(new Square(0 ,1));
-                temporaryChar = 'k';
-                permanentChar = 'K';
+                temporaryChar = 'j';
+                permanentChar = 'J';
                 break;
             case 2:
                 squares.add(new Square(0 ,0));
@@ -66,16 +66,16 @@ public class Piece
                 squares.add(new Square(1 ,0));
                 squares.add(new Square(1 ,1));
                 squares.add(new Square(2 ,1));
-                temporaryChar = 'v';
-                permanentChar = 'V';
+                temporaryChar = 's';
+                permanentChar = 'S';
                 break;
             case 5:
                 squares.add(new Square(1 ,0));
                 squares.add(new Square(2 ,0));
                 squares.add(new Square(0 ,1));
                 squares.add(new Square(1 ,1));
-                temporaryChar = 'a';
-                permanentChar = 'A';
+                temporaryChar = 'z';
+                permanentChar = 'Z';
                 break;
             case 6:
                 squares.add(new Square(1 ,0));
@@ -121,10 +121,10 @@ public class Piece
         }
     }
 
-    public void rotate()
+    public Boolean rotate()
     {
         Position[] newPositions = {new Position(0, 0), new Position(0, 0), new Position(0, 0), new Position(0, 0)};
-        if(temporaryChar == 'k' || temporaryChar == 'l' || temporaryChar == 't' || temporaryChar == 'v' || temporaryChar == 'a')
+        if(temporaryChar == 'j' || temporaryChar == 'l' || temporaryChar == 't' || temporaryChar == 's' || temporaryChar == 'z')
         {
             for(int i = 0; i < 4; i++)
             {
@@ -145,10 +145,11 @@ public class Piece
                     else
                         newPositions[i].setX(1);
                 }
+
                 if ((position.getY() + newPositions[i].getY()) < 14 && (position.getY() + newPositions[i].getY()) > 0)
                 {
                     if ((position.getX() + newPositions[i].getX()) > 9 || (position.getX() + newPositions[i].getX()) < 0 || gameState.getRegularBoard()[position.getY() + newPositions[i].getY()][position.getX() + newPositions[i].getX()] != ' ')
-                        return;
+                        return false;
                 }
             }
             for(int i = 0; i < 4; i++)
@@ -174,7 +175,7 @@ public class Piece
                 if ((position.getY() + newPositions[i].getY()) < 14 && (position.getY() + newPositions[i].getY()) > 0)
                 {
                     if ((position.getX() + newPositions[i].getX()) > 9 || (position.getX() + newPositions[i].getX()) < 0 || gameState.getRegularBoard()[position.getY() + newPositions[i].getY()][position.getX() + newPositions[i].getX()] != ' ')
-                        return;
+                        return false;
                 }
             }
             for(int i = 0; i < 4; i++)
@@ -183,40 +184,47 @@ public class Piece
                 squares.get(i).getPosition().setY(newPositions[i].getY());
             }
         }
+
         if(isHorizontal)
             isHorizontal = false;
         else
             isHorizontal = true;
+
+        return true;
     }
 
-    public void strafeLeft()
+    public Boolean strafeLeft()
     {
         for(int i = 0; i < 4; i++)
         {
             if(getSquarePos(i).getX() < 10 && getSquarePos(i).getX() >= 0 && getSquarePos(i).getY() < 15 && getSquarePos(i).getY() >= 0)
             {
                 if(getSquarePos(i).getX() - 1 < 0)
-                    return;
+                    return false;
                 if(gameState.getRegularBoard()[getSquarePos(i).getY()][getSquarePos(i).getX() - 1] != ' ')
-                    return;
+                    return false;
             }
         }
         position.setX(position.getX() - 1);
+
+        return true;
     }
 
-    public void strafeRight()
+    public Boolean strafeRight()
     {
         for(int i = 0; i < 4; i++)
         {
             if(getSquarePos(i).getX() < 10 && getSquarePos(i).getX() >= 0 && getSquarePos(i).getY() < 15 && getSquarePos(i).getY() >= 0)
             {
                 if(getSquarePos(i).getX() + 1 > 9)
-                    return;
+                    return false;
                 if(gameState.getRegularBoard()[getSquarePos(i).getY()][getSquarePos(i).getX() + 1] != ' ')
-                    return;
+                    return false;
             }
         }
         position.setX(position.getX() + 1);
+
+        return true;
     }
 
     public Boolean isDone()

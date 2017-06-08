@@ -21,6 +21,7 @@ public class GameState
     private boolean hoverPeriod = false;
     private boolean gameOver = false;
     private boolean lineWasDeleted = false;
+    private boolean pieceLocked = false;
 
     public GameState()
     {
@@ -77,7 +78,10 @@ public class GameState
         lineWasDeleted = false;
         fallingPiece.advance();
         if(!fallingPiece.isDone())
+        {
             hoverPeriod = false;
+            pieceLocked = false;
+        }
         if(hoverPeriod)
         {
             for(int i = 0; i < 4; i++)
@@ -86,6 +90,7 @@ public class GameState
                     board[fallingPiece.getSquarePos(i).getY()][fallingPiece.getSquarePos(i).getX()] = fallingPiece.getPermanentChar();
             }
             hoverPeriod = false;
+            pieceLocked = true;
             clearLines();
             generateNewPiece();
         }
@@ -94,19 +99,19 @@ public class GameState
             hoverPeriod = true;
     }
 
-    public void rotate()
+    public Boolean rotate()
     {
-        fallingPiece.rotate();
+        return fallingPiece.rotate();
     }
 
-    public void strafeLeft()
+    public Boolean strafeLeft()
     {
-        fallingPiece.strafeLeft();
+        return fallingPiece.strafeLeft();
     }
 
-    public void strafeRight()
+    public Boolean strafeRight()
     {
-        fallingPiece.strafeRight();
+        return fallingPiece.strafeRight();
     }
 
     private void generateNewPiece()
@@ -174,5 +179,10 @@ public class GameState
     public boolean wasLineDeleted()
     {
         return lineWasDeleted;
+    }
+
+    public boolean isPieceLocked()
+    {
+        return pieceLocked;
     }
 }

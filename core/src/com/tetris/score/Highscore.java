@@ -1,7 +1,8 @@
 package com.tetris.score;
 
 import java.util.ArrayList;
-import java.time.LocalDateTime;
+
+import static com.badlogic.gdx.Input.Keys.M;
 
 /**
  * Created by Alexandre on 07-06-2017.
@@ -10,11 +11,11 @@ import java.time.LocalDateTime;
 public class Highscore implements Comparable<Highscore>{
     private String name;
     private int score;
-    private String dateTime;
 
     private static ArrayList<Highscore> scoreList = new ArrayList<Highscore>();
 
-    public static ArrayList<Highscore> getScoreList() {
+    public static ArrayList<Highscore> getScoreList()
+    {
         return scoreList;
     }
 
@@ -25,13 +26,11 @@ public class Highscore implements Comparable<Highscore>{
     public Highscore() {
         this.name = "";
         this.score = 100;
-        this.dateTime = "";
     }
 
     public Highscore(String name, int score) {
         this.name = name;
         this.score = score;
-        //this.dateTime = LocalDateTime.now().toString();
     }
 
     public String getName() {
@@ -50,12 +49,15 @@ public class Highscore implements Comparable<Highscore>{
         this.score = score;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    @Override
+    public int compareTo(Highscore highscore)
+    {
+        return Integer.valueOf(highscore.score).compareTo(Integer.valueOf(score));
     }
 
     @Override
-    public int compareTo(Highscore highscore) {
-        return Integer.valueOf(highscore.score).compareTo(Integer.valueOf(score));
+    public int hashCode()
+    {
+        return name.hashCode() + Integer.toString(score).hashCode();
     }
 }

@@ -16,22 +16,21 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 import com.tetris.game.GameState;
 
-
-
 /**
  * Created by Alexandre on 04-05-2017.
  */
 
-public class GameScreen extends ScreenAdapter implements InputProcessor {
+public class GameScreen extends ScreenAdapter implements InputProcessor
+{
     private SpriteBatch batch;
     private Sprite square, backsprite, infosprite;
-    private Texture blue, green, white, background, info;
+    private Texture darkTone, midTone, lightTone, background, info;
     private GameState gameState;
     private int count = 0;
     private int strafeCount = 0;
     private boolean boost = false;
-    private int speed;
-    private int BASE_SPEED = 30;
+    private int speed = 30;
+    private int level = 1;
     private float FAST_DROP_ZONE;
     private float BLOCK_SIZE;
     private float HEADER_HEIGHT;
@@ -54,11 +53,9 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
         gameState = new GameState();
 
-        white = new Texture("whiteSquare.png");
-        blue = new Texture("blueSquare.png");
-        green = new Texture("greenSquare.png");
-        background = new Texture("gameBackground.png");
-        info = new Texture("infoBackground.png");
+        initiateTextures(1);
+        background = new Texture("ui/gameBackground.png");
+        info = new Texture("ui/infoBackground.png");
         backsprite = new Sprite(background);
         infosprite = new Sprite(info);
 
@@ -74,22 +71,23 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         NEXT_PIECE_MIDDLE_Y = Gdx.graphics.getHeight() - HEADER_HEIGHT/2;
         SCORE_MIDDLE_X = 0.067f * Gdx.graphics.getWidth() + (0.882f * Gdx.graphics.getWidth())*0.25f;
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("prstart.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         parameter.characters = "0123456789";
         font = generator.generateFont(parameter);
+        font.setColor(Color.WHITE);
 
         layout = new GlyphLayout();
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("music1.wav"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/gameMusic.wav"));
         music.setLooping(true);
         music.setVolume(0.1f);
 
-        rotate = Gdx.audio.newSound(Gdx.files.internal("rotate.wav"));
-        strafe = Gdx.audio.newSound(Gdx.files.internal("strafe.wav"));
-        drop = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-        line = Gdx.audio.newSound(Gdx.files.internal("line.wav"));
+        rotate = Gdx.audio.newSound(Gdx.files.internal("sounds/rotate.wav"));
+        strafe = Gdx.audio.newSound(Gdx.files.internal("sounds/strafe.wav"));
+        drop = Gdx.audio.newSound(Gdx.files.internal("sounds/drop.wav"));
+        line = Gdx.audio.newSound(Gdx.files.internal("sounds/line.wav"));
 
         Gdx.input.setInputProcessor(this);
     }
@@ -103,17 +101,41 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
         batch.begin();
 
-        batch.draw(infosprite, 0, Gdx.graphics.getHeight() - HEADER_HEIGHT, Gdx.graphics.getWidth(), HEADER_HEIGHT);
-        batch.draw(backsprite, START_X_BOARD , 0, BOARD_WIDTH , BOARD_HEIGHT);
-        layout.setText(font, Integer.toString(gameState.getScore()), Color.WHITE, Gdx.graphics.getWidth(), Align.left, true);
+        drawUiSprites();
 
-        for(int i = 0; i < 4; i++)
-        {
-            char representation = gameState.getNextPiece().getPermanentChar();
-            square = getSquareSprite(representation);
-            batch.draw(square, getNextPiecePositionX(representation) + gameState.getNextPiece().getSquare(i).getX() * BLOCK_SIZE, getNextPiecePositionY(representation) + gameState.getNextPiece().getSquare(i).getY() * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-        }
+        drawNextPiece();
 
+        drawBoardState();
+
+        drawScore();
+
+        batch.end();
+
+        checkAccelerometer();
+
+        tryStrafe();
+
+        tryBoost();
+
+        adjustSpeed();
+
+        checkIfPieceLocked();
+
+        checkIfLineDeleted();
+
+        checkGameOver();
+
+        count++;
+    }
+
+    private void drawScore()
+    {
+        layout.setText(font, Integer.toString(gameState.getScore()), Color.WHITE, Gdx.graphics.getWidth()/2, Align.center, true);
+        font.draw(batch, layout, 0, NEXT_PIECE_MIDDLE_Y);
+    }
+
+    private void drawBoardState()
+    {
         for(int x = 0; x < 10; x ++)
         {
             for(int y = 0; y < 15; y++)
@@ -123,41 +145,63 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
                     batch.draw(square, START_X + x*BLOCK_SIZE, START_Y + y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
+    }
 
-        font.setColor(Color.WHITE);
-        layout.setText(font, Integer.toString(gameState.getScore()), Color.WHITE, Gdx.graphics.getWidth()/2, Align.center, true);
-        font.draw(batch, layout, 0, NEXT_PIECE_MIDDLE_Y);
+    private void drawNextPiece()
+    {
+        char representation = gameState.getNextPiece().getPermanentChar();
+        square = getSquareSprite(representation);
+        for(int i = 0; i < 4; i++)
+            batch.draw(square, getNextPiecePositionX(representation) + gameState.getNextPiece().getSquare(i).getX() * BLOCK_SIZE, getNextPiecePositionY(representation) + gameState.getNextPiece().getSquare(i).getY() * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+    }
 
-        batch.end();
+    private void drawUiSprites() {
+        batch.draw(infosprite, 0, Gdx.graphics.getHeight() - HEADER_HEIGHT, Gdx.graphics.getWidth(), HEADER_HEIGHT);
+        batch.draw(backsprite, START_X_BOARD , 0, BOARD_WIDTH , BOARD_HEIGHT);
+        layout.setText(font, Integer.toString(gameState.getScore()), Color.WHITE, Gdx.graphics.getWidth(), Align.left, true);
+    }
 
-        if (Math.abs(Gdx.input.getAccelerometerX()) < 0.75)
-            strafeCount = 0;
-        else if (Math.abs(Gdx.input.getAccelerometerX()) >= 0.75 && Math.abs(Gdx.input.getAccelerometerX()) < 1.5)
+    private void checkGameOver()
+    {
+        if(gameState.checkGameOver())
         {
-            strafeCount++;
+            music.stop();
+            GameTetris.get().setScreen(new GameOverScreen(gameState.getScore()));
         }
-        else
+    }
+
+    private void checkIfLineDeleted()
+    {
+        if(gameState.wasLineDeleted() && !linePlayed)
         {
-            strafeCount += 2;
+            line.play();
+            Gdx.input.vibrate(100);
+            linePlayed = true;
         }
+    }
 
-        if(strafeCount >= 10)
+    private void checkIfPieceLocked()
+    {
+        if(gameState.isPieceLocked() && !dropPlayed)
         {
-            if (Gdx.input.getAccelerometerX() >= 0.75)
-            {
-                gameState.strafeLeft();
-                strafe.play();
-            }
-            else if (Gdx.input.getAccelerometerX() <= -0.75)
-            {
-                gameState.strafeRight();
-                strafe.play();
-            }
-            strafeCount = 0;
+            drop.play();
+            Gdx.input.vibrate(25);
+            dropPlayed = true;
         }
+    }
 
-        count++;
+    private void adjustSpeed()
+    {
+        if(level != gameState.getLevel())
+        {
+            level = gameState.getLevel();
+            initiateTextures(level);
+            speed = (int) (30 - 11.377 * Math.log(level));
+        }
+    }
 
+    private void tryBoost()
+    {
         if(boost)
         {
             if(count >= 3)
@@ -173,29 +217,34 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
             dropPlayed = false;
             linePlayed = false;
         }
+    }
 
-        if(gameState.getLevel() <= 5)
-            speed = BASE_SPEED - (gameState.getLevel() - 1) * 5;
+    private void tryStrafe()
+    {
+        if(strafeCount >= 10)
+        {
+            if (Gdx.input.getAccelerometerX() >= 0.75)
+            {
+                if(gameState.strafeLeft())
+                    strafe.play();
+            }
+            else if (Gdx.input.getAccelerometerX() <= -0.75)
+            {
+                if(gameState.strafeRight())
+                    strafe.play();
+            }
+            strafeCount = 0;
+        }
+    }
+
+    private void checkAccelerometer()
+    {
+        if (Math.abs(Gdx.input.getAccelerometerX()) < 0.75)
+            strafeCount = 0;
+        else if (Math.abs(Gdx.input.getAccelerometerX()) >= 0.75 && Math.abs(Gdx.input.getAccelerometerX()) < 1.5)
+            strafeCount++;
         else
-            speed = BASE_SPEED - 15 - gameState.getLevel();
-
-        if(gameState.getFallingPiece().isDone() && !dropPlayed)
-        {
-            drop.play();
-            dropPlayed = true;
-        }
-
-        if(gameState.wasLineDeleted() && !linePlayed)
-        {
-            line.play();
-            linePlayed = true;
-        }
-
-        if(gameState.checkGameOver())
-        {
-            music.stop();
-            GameTetris.get().setScreen(new GameOverScreen(gameState.getScore()));
-        }
+            strafeCount += 2;
     }
 
     private float getNextPiecePositionX(char representation)
@@ -219,28 +268,35 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     private Sprite getSquareSprite(char representation)
     {
         if(representation == 'T' || representation == 't')
-            return new Sprite(white);
-        else if(representation == 'S' || representation == 's')
-            return new Sprite(white);
-        else if(representation == 'K' || representation == 'k')
-            return new Sprite(blue);
-        else if(representation == 'A' || representation == 'a')
-            return new Sprite(green);
+            return new Sprite(lightTone);
+        else if(representation == 'O' || representation == 'o')
+            return new Sprite(lightTone);
+        else if(representation == 'J' || representation == 'j')
+            return new Sprite(darkTone);
+        else if(representation == 'Z' || representation == 'z')
+            return new Sprite(midTone);
         else if(representation == 'L' || representation == 'l')
-            return new Sprite(green);
-        else if(representation == 'V' || representation == 'v')
-            return new Sprite(blue);
+            return new Sprite(midTone);
+        else if(representation == 'S' || representation == 's')
+            return new Sprite(darkTone);
         else
-            return new Sprite(white);
+            return new Sprite(lightTone);
+    }
+
+    private void initiateTextures(int level)
+    {
+        lightTone = new Texture("sprites/" + level + "/light.png");
+        darkTone = new Texture("sprites/" + level + "/dark.png");
+        midTone = new Texture("sprites/" + level + "/mid.png");
     }
 
     @Override
     public void dispose ()
     {
         batch.dispose();
-        white.dispose();
-        blue.dispose();
-        green.dispose();
+        lightTone.dispose();
+        darkTone.dispose();
+        midTone.dispose();
         background.dispose();
         info.dispose();
         generator.dispose();
@@ -259,8 +315,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         }
         else if(screenY < FAST_DROP_ZONE)
         {
-            gameState.rotate();
-            rotate.play();
+            if(gameState.rotate())
+            {
+                Gdx.input.vibrate(25);
+                rotate.play();
+            }
         }
         return true;
     }
@@ -279,10 +338,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     }
 
     @Override
-    public void resize (int width, int height)
-    {
-        return;
-    }
+    public void resize (int width, int height) {}
 
     @Override
     public boolean keyDown (int keycode)

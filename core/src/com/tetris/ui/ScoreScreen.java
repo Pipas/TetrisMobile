@@ -62,16 +62,16 @@ public class ScoreScreen extends ScreenAdapter {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("prstart.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         titleFont = generator.generateFont(parameter);
         titleFont.setColor(Color.WHITE);
         scoreFont = titleFont;
 
-        background = new Texture("mainMenuBackground.png");
-        top = new Texture("mainMenuTop.png");
-        bot = new Texture("mainMenuBottom.png");
+        background = new Texture("ui/mainMenuBackground.png");
+        top = new Texture("ui/mainMenuTop.png");
+        bot = new Texture("ui/mainMenuBottom.png");
 
         Label.LabelStyle ls = new Label.LabelStyle(titleFont, Color.WHITE);
         title = new Label("HIGHSCORES", ls);

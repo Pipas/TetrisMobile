@@ -43,18 +43,18 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("prstart.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
         titleFont = generator.generateFont(parameter);
         titleFont.setColor(Color.WHITE);
         buttonFont = titleFont;
 
-        background = new Texture("mainMenuBackground.png");
-        top = new Texture("mainMenuTop.png");
-        bot = new Texture("mainMenuBottom.png");
+        background = new Texture("ui/mainMenuBackground.png");
+        top = new Texture("ui/mainMenuTop.png");
+        bot = new Texture("ui/mainMenuBottom.png");
 
-        SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(new Texture("buttonBackground.png")));
+        SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(new Texture("ui/buttonBackground.png")));
         TextButton.TextButtonStyle ts = new TextButton.TextButtonStyle(spriteDrawable, spriteDrawable, spriteDrawable, buttonFont);
         ts.pressedOffsetX = 3;
         ts.pressedOffsetY = -3;
