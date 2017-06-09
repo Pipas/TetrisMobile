@@ -365,6 +365,10 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
         rotateSound.dispose();
         strafeSound.dispose();
         dropSound.dispose();
+        lineSound.dispose();
+        gameoversound.dispose();
+        pausesound.dispose();
+        font.dispose();
     }
 
     @Override

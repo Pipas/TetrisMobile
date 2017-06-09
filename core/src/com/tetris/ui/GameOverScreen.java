@@ -166,5 +166,16 @@ public class GameOverScreen extends ScreenAdapter
         stage.draw();
 
     }
+
+    @Override
+    public void dispose()
+    {
+        batch.dispose();
+        stage.dispose();
+        background.dispose();
+        top.dispose();
+        bot.dispose();
+        font.dispose();
+    }
 }
 
