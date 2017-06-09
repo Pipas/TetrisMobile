@@ -68,11 +68,6 @@ public class GameState
         return nextPiece;
     }
 
-    public Piece getFallingPiece()
-    {
-        return fallingPiece;
-    }
-
     public void advance()
     {
         lineWasDeleted = false;
@@ -149,6 +144,13 @@ public class GameState
             }
         }
 
+        addScore();
+
+        linesDeletedRound = 0;
+    }
+
+    private void addScore()
+    {
         if(linesDeletedRound == 1)
             score += 40 * level;
         else if(linesDeletedRound == 2)
@@ -157,8 +159,6 @@ public class GameState
             score += 300 * level;
         else if(linesDeletedRound == 4)
             score += 1200 * level;
-
-        linesDeletedRound = 0;
     }
 
     public int getScore()

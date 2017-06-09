@@ -17,8 +17,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 import com.tetris.game.GameState;
 
-import static java.awt.Event.PAUSE;
-
 /**
  * Created by Alexandre on 04-05-2017.
  */
@@ -37,9 +35,9 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
     private GameState gameState;
     private FreeTypeFontGenerator generator;
     private BitmapFont font;
-    private GlyphLayout layout, pauselayout;
+    private GlyphLayout layout;
     private Music music;
-    private Sound strafeSound, rotateSound, dropSound, lineSound, gameoversound;
+    private Sound strafeSound, rotateSound, dropSound, lineSound, gameoversound, pausesound;
     private boolean dropPlayed = false;
     private boolean linePlayed = false;
     private boolean boost = false;
@@ -81,6 +79,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
         dropSound = Gdx.audio.newSound(Gdx.files.internal("sounds/drop.wav"));
         lineSound = Gdx.audio.newSound(Gdx.files.internal("sounds/line.wav"));
         gameoversound = Gdx.audio.newSound(Gdx.files.internal("sounds/gameover.wav"));
+        pausesound = Gdx.audio.newSound(Gdx.files.internal("sounds/pause.wav"));
     }
 
     private void initiateMusic(int i)
@@ -182,7 +181,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
     private void drawScore()
     {
         layout.setText(font, Integer.toString(gameState.getScore()), Color.WHITE, Gdx.graphics.getWidth()/2, Align.center, true);
-        font.draw(batch, layout, 0, NEXT_PIECE_MIDDLE_Y);
+        font.draw(batch, layout, 0, NEXT_PIECE_MIDDLE_Y + layout.height/2);
     }
 
     private void drawPause()
@@ -320,7 +319,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
     private float getNextPiecePositionX(char representation)
     {
         if(representation == 'I')
-            return NEXT_PIECE_MIDDLE_X - 3 * BLOCK_SIZE;
+            return NEXT_PIECE_MIDDLE_X - 2 * BLOCK_SIZE;
         else if(representation == 'O')
             return NEXT_PIECE_MIDDLE_X - BLOCK_SIZE;
         else
@@ -337,18 +336,10 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
 
     private Sprite getSquareSprite(char representation)
     {
-        if(representation == 'T' || representation == 't')
-            return new Sprite(lightTone);
-        else if(representation == 'O' || representation == 'o')
-            return new Sprite(lightTone);
-        else if(representation == 'J' || representation == 'j')
+        if(representation == 'J' || representation == 'j' || representation == 'S' || representation == 's')
             return new Sprite(darkTone);
-        else if(representation == 'Z' || representation == 'z')
+        else if(representation == 'Z' || representation == 'z' || representation == 'L' || representation == 'l')
             return new Sprite(midTone);
-        else if(representation == 'L' || representation == 'l')
-            return new Sprite(midTone);
-        else if(representation == 'S' || representation == 's')
-            return new Sprite(darkTone);
         else
             return new Sprite(lightTone);
     }
@@ -425,10 +416,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
             if(STATE == State.RUN)
             {
                 STATE = State.PAUSE;
+                pausesound.play();
             }
             else
             {
                 STATE = State.RUN;
+                pausesound.play();
             }
         }
 
