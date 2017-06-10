@@ -67,7 +67,7 @@ public class MenuScreen extends ScreenAdapter
     {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
+        parameter.size = (int) (0.04f * Gdx.graphics.getHeight());
         font = generator.generateFont(parameter);
         font.setColor(Color.WHITE);
     }

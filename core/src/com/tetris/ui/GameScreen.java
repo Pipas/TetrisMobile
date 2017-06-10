@@ -98,7 +98,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor
     {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/prstart.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 50;
+        parameter.size = (int) HEADER_HEIGHT/5;
         font = generator.generateFont(parameter);
         font.setColor(Color.WHITE);
     }
