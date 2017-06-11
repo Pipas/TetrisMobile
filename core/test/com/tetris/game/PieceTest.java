@@ -19,6 +19,11 @@ public class PieceTest extends GameStateTest {
      */
     int bottomLeft;
 
+    /**
+     * Sets up the tests, initializes GameState (super) and Piece
+     *
+     * @throws Exception handled exeption
+     */
     @Override
     @Before
     public void setUp() throws Exception {
@@ -31,15 +36,9 @@ public class PieceTest extends GameStateTest {
             bottomLeft = 0;
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     /**
-     * Test advance.
+     * Test falling of a piece (position) and if it stops when it reaches floor or other pieces
      *
-     * @throws Exception the exception
      */
     @Test
     public void testAdvance() throws Exception {
@@ -53,7 +52,7 @@ public class PieceTest extends GameStateTest {
     }
 
     /**
-     * Test strafe left.
+     * Test moving left of the piece and if it stops when it reaches side or other pieces.
      *
      * @throws Exception the exception
      */
@@ -69,7 +68,7 @@ public class PieceTest extends GameStateTest {
     }
 
     /**
-     * Test strafe right.
+     * Test moving right of the piece and if it stops when it reaches side or other pieces.
      *
      * @throws Exception the exception
      */
@@ -90,7 +89,7 @@ public class PieceTest extends GameStateTest {
     }
 
     /**
-     * Test rotate.
+     * Test rotation of the piece.
      *
      * @throws Exception the exception
      */
@@ -100,7 +99,7 @@ public class PieceTest extends GameStateTest {
     }
 
     /**
-     * Test done.
+     * Test if piece is stopped because it reached the floor or other pieces
      *
      * @throws Exception the exception
      */
@@ -111,57 +110,19 @@ public class PieceTest extends GameStateTest {
         assertTrue(testPiece.isDone());
     }
 
-    @Test
-    public void rotate() throws Exception {
-
-    }
-
+    /*
+    *Override functions (PieceTest extends GameStateTest)
+    *
+    */
     @Override
     public void testGameOver() throws Exception {
     }
 
+    /*
+    *Override functions (PieceTest extends GameStateTest)
+    *
+    */
     @Override
     public void testLine() throws Exception {
     }
-
-    @Test
-    public void strafeLeft() throws Exception {
-
-    }
-
-    @Test
-    public void strafeRight() throws Exception {
-
-    }
-
-    /**
-     * Is done.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void isDone() throws Exception {
-
-    }
-
-    /**
-     * Gets temporary char.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getTemporaryChar() throws Exception {
-
-    }
-
-    /**
-     * Gets permanent char.
-     *
-     * @throws Exception the exception
-     */
-    @Test
-    public void getPermanentChar() throws Exception {
-
-    }
-
 }
