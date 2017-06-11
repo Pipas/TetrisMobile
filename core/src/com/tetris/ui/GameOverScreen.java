@@ -19,9 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.tetris.score.Highscore;
 
 /**
- * Created by Alexandre on 04-05-2017.
+ * Game Over screen
  */
-
 public class GameOverScreen extends ScreenAdapter
 {
     private SpriteBatch batch;
@@ -35,6 +34,11 @@ public class GameOverScreen extends ScreenAdapter
     private int score;
     private Label.LabelStyle labelStyle;
 
+    /**
+     * Instantiates a new Game over screen.
+     *
+     * @param score the score the player got
+     */
     public GameOverScreen(int score)
     {
         this.score = score;

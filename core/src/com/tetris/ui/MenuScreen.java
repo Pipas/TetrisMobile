@@ -17,9 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 /**
- * Created by Alexandre on 04-05-2017.
+ * The Menu screen.
  */
-
 public class MenuScreen extends ScreenAdapter
 {
 

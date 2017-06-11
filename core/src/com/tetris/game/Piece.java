@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by Pipas_ on 18/05/2017.
+ * Class that represents a piece in the game.
  */
-
 public class Piece
 {
     private ArrayList<Square> squares = new ArrayList<Square>();
@@ -17,6 +16,13 @@ public class Piece
     private char temporaryChar;
     private char permanentChar;
 
+    /**
+     * Instantiates a new Piece.
+     *
+     * @param x x position of the piece on the play area
+     * @param y y position of the piece on the play area
+     * @param g the game state where the piece is instanciated
+     */
     public Piece(int x, int y, GameState g)
     {
         gameState = g;
@@ -25,6 +31,14 @@ public class Piece
         newPiece(rand.nextInt(7));
     }
 
+    /**
+     * Instantiates a new Piece.
+     *
+     * @param x x position of the piece on the play area
+     * @param y y position of the piece on the play area
+     * @param g the game state where the piece is instanciated
+     * @param type the type of piece to be instantiated
+     */
     public Piece(int x, int y, GameState g, int type)
     {
         gameState = g;
@@ -32,8 +46,6 @@ public class Piece
         Random rand = new Random();
         newPiece(type);
     }
-
-
 
     private void newPiece(int ID)
     {
@@ -73,16 +85,33 @@ public class Piece
         permanentChar = permanent;
     }
 
+    /**
+     * Returns the current position of the piece
+     *
+     * @return the position of the piece
+     */
     public Position getPos()
     {
         return position;
     }
 
+    /**
+     * Returns a square from the piece with the index 'index'
+     *
+     * @param index the index of the square
+     * @return the square
+     */
     public Position getSquare(int index)
     {
         return squares.get(index).getPosition();
     }
 
+    /**
+     * Returns the position of a square from the piece relative to the play area with the index 'index'
+     *
+     * @param index the index of the square
+     * @return the square position
+     */
     public Position getSquarePos(int index)
     {
         Position squarePosition = new Position(squares.get(index).getPosition().getX(), squares.get(index).getPosition().getY());
@@ -93,6 +122,9 @@ public class Piece
         return squarePosition;
     }
 
+    /**
+     * Advances the state of the piece. It decreases it's Y position and if it reaches the bottom sets the piece endState as true
+     */
     public void advance()
     {
         if(canFall())
@@ -106,6 +138,11 @@ public class Piece
         }
     }
 
+    /**
+     * Rotates the piece if it's possible
+     *
+     * @return if the piece rotates
+     */
     public Boolean rotate()
     {
         if(temporaryChar == 'j' || temporaryChar == 'l' || temporaryChar == 't' || temporaryChar == 's' || temporaryChar == 'z')
@@ -232,6 +269,11 @@ public class Piece
         }
     }
 
+    /**
+     * Strafes the piece left if possible
+     *
+     * @return if the piece moves left
+     */
     public Boolean strafeLeft()
     {
         for(int i = 0; i < 4; i++)
@@ -249,6 +291,11 @@ public class Piece
         return true;
     }
 
+    /**
+     * Strafes the piece right if possible
+     *
+     * @return if the piece moves eight
+     */
     public Boolean strafeRight()
     {
         for(int i = 0; i < 4; i++)
@@ -266,6 +313,11 @@ public class Piece
         return true;
     }
 
+    /**
+     * Returns if the piece reaches it's end state
+     *
+     * @return if the piece reached it's end state
+     */
     public Boolean isDone()
     {
         return endState;
@@ -284,11 +336,21 @@ public class Piece
         return true;
     }
 
+    /**
+     * Returns the representation of the piece in the game state while it's still falling
+     *
+     * @return the temporary representation
+     */
     public char getTemporaryChar()
     {
         return temporaryChar;
     }
 
+    /**
+     * Returns the representation of the piece in the game state when it locks to the floor
+     *
+     * @return the permanent representation
+     */
     public char getPermanentChar()
     {
         return permanentChar;

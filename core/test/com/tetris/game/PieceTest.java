@@ -7,10 +7,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by Alexandre on 10-06-2017.
+ * The type Piece test.
  */
 public class PieceTest extends GameStateTest {
+    /**
+     * The Test piece.
+     */
     Piece testPiece;
+    /**
+     * The Bottom left.
+     */
     int bottomLeft;
 
     @Override
@@ -30,6 +36,11 @@ public class PieceTest extends GameStateTest {
 
     }
 
+    /**
+     * Test advance.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testAdvance() throws Exception {
         assertEquals(5 + bottomLeft, testPiece.getSquarePos(0).getX());
@@ -41,6 +52,11 @@ public class PieceTest extends GameStateTest {
         assertEquals(0, testPiece.getSquarePos(0).getY());
     }
 
+    /**
+     * Test strafe left.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testStrafeLeft() throws Exception {
         assertEquals(5 + bottomLeft, testPiece.getSquarePos(0).getX());
@@ -52,6 +68,11 @@ public class PieceTest extends GameStateTest {
         assertEquals(0 + bottomLeft, testPiece.getSquarePos(0).getX());
     }
 
+    /**
+     * Test strafe right.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testStrafeRight() throws Exception {
         assertEquals(5 + bottomLeft, testPiece.getSquarePos(0).getX());
@@ -68,11 +89,21 @@ public class PieceTest extends GameStateTest {
         assertEquals(9, rightEdge);
     }
 
+    /**
+     * Test rotate.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testRotate() throws Exception {
         //int rotateType[] = ;
     }
 
+    /**
+     * Test done.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testDone() throws Exception {
         for (int i = 0; i < 20; i++)
@@ -103,16 +134,31 @@ public class PieceTest extends GameStateTest {
 
     }
 
+    /**
+     * Is done.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void isDone() throws Exception {
 
     }
 
+    /**
+     * Gets temporary char.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getTemporaryChar() throws Exception {
 
     }
 
+    /**
+     * Gets permanent char.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getPermanentChar() throws Exception {
 

@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Created by Alexandre on 04-05-2017.
+ * The Score screen.
  */
-
 public class ScoreScreen extends ScreenAdapter
 {
 

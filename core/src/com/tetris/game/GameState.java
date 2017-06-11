@@ -6,9 +6,8 @@ import static com.badlogic.gdx.Input.Keys.M;
 import static com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape.line;
 
 /**
- * Created by Pipas_ on 18/05/2017.
+ * Class that handles the state of the game being played
  */
-
 public class GameState
 {
     private char[][] board;
@@ -24,6 +23,9 @@ public class GameState
     private boolean lineWasDeleted = false;
     private boolean pieceLocked = false;
 
+    /**
+     * Instantiates a new Game state.
+     */
     public GameState()
     {
         board = new char[15][10];
@@ -34,6 +36,11 @@ public class GameState
         nextPiece = new Piece(4, 14, this);
     }
 
+    /**
+     * Returns the state of the board with the falling piece.
+     *
+     * @return the state of the board
+     */
     public char[][] getDynamicBoard()
     {
         clearTemporaryBoard();
@@ -58,25 +65,48 @@ public class GameState
         }
     }
 
+    /**
+     * Returns the state of the board without the currently falling piece.
+     *
+     * @return the state of the board
+     */
     public char[][] getRegularBoard()
     {
         clearTemporaryBoard();
         return board;
     }
 
+    /**
+     * Returns the next piece to fall after the one in play reaches the bottom
+     *
+     * @return the next piece
+     */
     public Piece getNextPiece()
     {
         return nextPiece;
     }
 
+    /**
+     * Returns the piece currently falling
+     *
+     * @return the falling piece
+     */
     public Piece getFallingPiece() {
         return fallingPiece;
     }
 
+    /**
+     * Sets the falling piece
+     *
+     * @param p the piece to set as falling
+     */
     public void setFallingPiece(Piece p) {
         fallingPiece = p;
     }
 
+    /**
+     * Advances the game state. Makes the piece fall and if it reaches the floor handles replacing it with the next piece.
+     */
     public void advance()
     {
         lineWasDeleted = false;
@@ -103,16 +133,31 @@ public class GameState
             hoverPeriod = true;
     }
 
+    /**
+     * Rotates the currently falling piece
+     *
+     * @return if the piece rotated
+     */
     public Boolean rotate()
     {
         return fallingPiece.rotate();
     }
 
+    /**
+     * Strafes the falling piece left
+     *
+     * @return if the piece moved left
+     */
     public Boolean strafeLeft()
     {
         return fallingPiece.strafeLeft();
     }
 
+    /**
+     * Strafes the falling piece right
+     *
+     * @return if the piece moved left
+     */
     public Boolean strafeRight()
     {
         return fallingPiece.strafeRight();
@@ -170,26 +215,51 @@ public class GameState
             score += 1200 * level;
     }
 
+    /**
+     * Returns the current score of the game.
+     *
+     * @return the current score
+     */
     public int getScore()
     {
         return score;
     }
 
+    /**
+     * Returns the current level of the game.
+     *
+     * @return the current level
+     */
     public int getLevel()
     {
         return level;
     }
 
+    /**
+     * Checks if the game is over
+     *
+     * @return if the game is over
+     */
     public boolean checkGameOver()
     {
         return gameOver;
     }
 
+    /**
+     * Checks if one or more lines were deleted
+     *
+     * @return if it deletes
+     */
     public boolean wasLineDeleted()
     {
         return lineWasDeleted;
     }
 
+    /**
+     * Checks if the currently falling piece locks in the play area
+     *
+     * @return if it locks
+     */
     public boolean isPieceLocked()
     {
         return pieceLocked;

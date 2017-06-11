@@ -7,17 +7,27 @@ import com.tetris.score.DatabaseManager;
 import static org.junit.Assert.*;
 
 /**
- * Created by Alexandre on 11-06-2017.
+ * Class that handles tests with the Highscore functions
  */
 public class HighscoreTest {
     private DatabaseManager databaseManager;
 
+    /**
+     * Sets up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
      /*   databaseManager.connect();
         databaseManager.getScores();*/
     }
 
+    /**
+     * Test update less.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testUpdateLess() throws Exception {
        /* int min = Highscore.getScoreList().get(Highscore.getScoreList().size() - 1).getScore() - 10;
@@ -38,6 +48,11 @@ public class HighscoreTest {
        assertTrue(true);
     }
 
+    /**
+     * Test update more.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testUpdateMore() throws Exception {
 

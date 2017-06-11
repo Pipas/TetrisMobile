@@ -7,21 +7,39 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by Alexandre on 10-06-2017.
+ * The class that handles unit tests for the game
  */
 public class GameStateTest {
+    /**
+     * The Game state to be tested
+     */
     GameState gameTest;
 
+    /**
+     * Sets up the tests.
+     *
+     * @throws Exception handled exeption
+     */
     @Before
     public void setUp() throws Exception {
         gameTest = new GameState();
     }
 
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
     @After
     public void tearDown() throws Exception {
 
     }
 
+    /**
+     * Test game over.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testGameOver() throws Exception {
         for (int i = 0; i < 14; i++){
@@ -34,6 +52,11 @@ public class GameStateTest {
         assertTrue(gameTest.checkGameOver());
     }
 
+    /**
+     * Test line.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testLine() throws Exception {
         for (int i = 0; i < 8; i++)
@@ -54,6 +77,11 @@ public class GameStateTest {
         assertEquals(' ', gameTest.getDynamicBoard()[0][9]);
     }
 
+    /**
+     * Test score level.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void testScoreLevel() throws Exception {
         for (int i = 0; i < 8; i++)
@@ -101,46 +129,91 @@ public class GameStateTest {
 
     }
 
+    /**
+     * Advance.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void advance() throws Exception {
 
     }
 
+    /**
+     * Rotate.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void rotate() throws Exception {
 
     }
 
+    /**
+     * Strafe left.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void strafeLeft() throws Exception {
 
     }
 
+    /**
+     * Strafe right.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void strafeRight() throws Exception {
 
     }
 
+    /**
+     * Gets score.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getScore() throws Exception {
 
     }
 
+    /**
+     * Gets level.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getLevel() throws Exception {
 
     }
 
+    /**
+     * Check game over.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void checkGameOver() throws Exception {
 
     }
 
+    /**
+     * Was line deleted.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void wasLineDeleted() throws Exception {
 
     }
 
+    /**
+     * Is piece locked.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void isPieceLocked() throws Exception {
 

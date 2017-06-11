@@ -18,14 +18,22 @@ import com.badlogic.gdx.utils.Align;
 import com.tetris.game.GameState;
 
 /**
- * Created by Alexandre on 04-05-2017.
+ * The Game screen.
  */
-
 public class GameScreen extends ScreenAdapter implements InputProcessor
 {
+    /**
+     * The enum State.
+     */
     public enum State
     {
+        /**
+         * Pause state.
+         */
         PAUSE,
+        /**
+         * Run state.
+         */
         RUN
     }
 
