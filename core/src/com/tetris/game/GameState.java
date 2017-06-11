@@ -12,6 +12,7 @@ import static com.badlogic.gdx.graphics.g2d.ParticleEmitter.SpawnShape.line;
 public class GameState
 {
     private char[][] board;
+
     private Piece fallingPiece;
     private Piece nextPiece;
     private int totalLinesDeleted = 0;
@@ -66,6 +67,14 @@ public class GameState
     public Piece getNextPiece()
     {
         return nextPiece;
+    }
+
+    public Piece getFallingPiece() {
+        return fallingPiece;
+    }
+
+    public void setFallingPiece(Piece p) {
+        fallingPiece = p;
     }
 
     public void advance()

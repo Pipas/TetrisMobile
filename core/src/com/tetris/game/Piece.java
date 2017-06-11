@@ -25,6 +25,16 @@ public class Piece
         newPiece(rand.nextInt(7));
     }
 
+    public Piece(int x, int y, GameState g, int type)
+    {
+        gameState = g;
+        position = new Position(x, y);
+        Random rand = new Random();
+        newPiece(type);
+    }
+
+
+
     private void newPiece(int ID)
     {
         switch(ID)
